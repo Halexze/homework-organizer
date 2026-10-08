@@ -23,6 +23,26 @@ def build_parser() -> argparse.ArgumentParser:
     # rename - 需求2：批量改名（在 feature/req2 中实现）
     p_rename = subparsers.add_parser("rename", help="按规则批量改名")
     p_rename.add_argument("folder", help="目标文件夹路径")
+    p_rename.add_argument(
+        "--pattern",
+        required=True,
+        help="输入文件名模式，用 {字段名} 占位，例如 {id}_{name}_{title}",
+    )
+    p_rename.add_argument(
+        "--output",
+        required=True,
+        help="输出文件名模板，使用相同字段名，例如 {title}_{id}",
+    )
+    p_rename.add_argument(
+        "--ext",
+        default=None,
+        help="仅处理指定扩展名的文件，多个用逗号分隔",
+    )
+    p_rename.add_argument(
+        "--delimiter",
+        default="_",
+        help="字段分隔符，默认为下划线",
+    )
 
     # archive - 需求3：归档与报告（在 feature/req3 中实现）
     p_archive = subparsers.add_parser("archive", help="按类别归档文件")
@@ -59,6 +79,12 @@ _HANDLERS: dict = {}
 from .scanner import cmd_list as _cmd_list  # noqa: E402
 
 _HANDLERS["list"] = _cmd_list
+
+
+# 需求2：批量改名
+from .renamer import cmd_rename as _cmd_rename  # noqa: E402
+
+_HANDLERS["rename"] = _cmd_rename
 
 
 if __name__ == "__main__":

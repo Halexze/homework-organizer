@@ -45,8 +45,34 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # archive - 需求3：归档与报告（在 feature/req3 中实现）
-    p_archive = subparsers.add_parser("archive", help="按类别归档文件")
+    p_archive = subparsers.add_parser("archive", help="按类别归档文件并生成报告")
     p_archive.add_argument("folder", help="目标文件夹路径")
+    p_archive.add_argument(
+        "--by",
+        choices=["ext", "name"],
+        default="ext",
+        help="归档依据：ext=按扩展名（默认），name=按文件名中的字段",
+    )
+    p_archive.add_argument(
+        "--pattern",
+        default=None,
+        help="by=name 时使用的文件名模式，如 {semester}_{id}_{name}_{title}",
+    )
+    p_archive.add_argument(
+        "--field",
+        default=None,
+        help="by=name 时作为类别的字段名，如 semester",
+    )
+    p_archive.add_argument(
+        "--ext",
+        default=None,
+        help="仅归档指定扩展名的文件，多个用逗号分隔",
+    )
+    p_archive.add_argument(
+        "--delimiter",
+        default="_",
+        help="字段分隔符，默认为下划线",
+    )
 
     # undo - 需求3：撤销（在 feature/req3 中实现）
     p_undo = subparsers.add_parser("undo", help="撤销上次操作")
@@ -85,6 +111,13 @@ _HANDLERS["list"] = _cmd_list
 from .renamer import cmd_rename as _cmd_rename  # noqa: E402
 
 _HANDLERS["rename"] = _cmd_rename
+
+
+# 需求3：归档与报告 + 撤销
+from .archiver import cmd_archive as _cmd_archive, cmd_undo as _cmd_undo  # noqa: E402
+
+_HANDLERS["archive"] = _cmd_archive
+_HANDLERS["undo"] = _cmd_undo
 
 
 if __name__ == "__main__":

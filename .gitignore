@@ -9,3 +9,4 @@ build/
 *.log
 .history/
 .organizer_history.json
+testdata/

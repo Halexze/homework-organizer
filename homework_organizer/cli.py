@@ -55,5 +55,11 @@ def main(argv=None) -> int:
 _HANDLERS: dict = {}
 
 
+# 需求1：扫描与列出
+from .scanner import cmd_list as _cmd_list  # noqa: E402
+
+_HANDLERS["list"] = _cmd_list
+
+
 if __name__ == "__main__":
     sys.exit(main())
